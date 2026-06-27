@@ -1,0 +1,12 @@
+{
+    "public_key_base64": "iojj3XQJ8ZX9UtstPLpdcspnCb8dlBIb83SIAbQPb1w=",
+    "token": "eyJrZXkiOiJORFYtTExNRy1FWE5ZLVJQVTEtN1QyUSIsImV4cGlyZXMiOiIyMDk5LTAxLTAxVDAwOjAwOjAwWiIsIm1heCI6MywiaWF0IjoxNzAwMDAwMDAwfQ.ZUk6Ef8bzqo29WJmQLcRIgvytrroQ_o_z600fTzt3u4-WfkR5WgqFylDBSKM3NtPLMw9cWMsVKvNXmHq4m5dCg",
+    "payload": {
+        "key": "NDV-LLMG-EXNY-RPU1-7T2Q",
+        "expires": "2099-01-01T00:00:00Z",
+        "max": 3,
+        "iat": 1700000000
+    },
+    "crl_token": "eyJyZXZva2VkX2tleXMiOlsiZjI1Y2U0M2RhYmMzYjQ5M2MxOTRmMjk1MzUxN2RiODljMmZhZDU2YzgxN2U4MjczYjcwMzg4Y2JjZGYyMDVkMSJdLCJyZXZva2VkX2ZpbmdlcnByaW50cyI6W10sImdlbmVyYXRlZF9hdCI6IjIwMjYtMDEtMDFUMDA6MDA6MDBaIiwiaWF0IjoxNzAwMDAwMDAwfQ.dBneG7uo4GVhimyv1KBQH8EBfcLqLuhzuw0hgFd5ZDQgNLe2cvd6W25Qp-kmOTBZR-GVk4rpA-HUACokYCRgCQ",
+    "revoked_key": "REVOKED-KEY-1"
+}

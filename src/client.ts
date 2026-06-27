@@ -7,6 +7,7 @@ import {
   WplmConfigError,
   WplmError,
   WplmNetworkError,
+  WplmProductMismatch,
   WplmSignatureInvalid,
 } from './errors.js';
 import {
@@ -91,6 +92,18 @@ export class WplmClient {
       if (result.signedPayload) {
         await this.store.write(K_SIGNED, result.signedPayload);
       }
+      // Enforce product binding from the *signed* payload (not the unsigned
+      // license JSON), so a key issued for another product is rejected even
+      // online. No-op when productId is undefined.
+      if (result.valid && this.productId !== undefined) {
+        if (!result.signedPayload) {
+          throw new WplmProductMismatch(
+            `License is valid but carries no signed payload to verify product binding for product ${this.productId}.`,
+            'product_mismatch',
+          );
+        }
+        this.enforceProductId(await this.verifyWithKeyRefresh(result.signedPayload));
+      }
       await this.advanceTimeFloor(Math.floor(Date.now() / 1000));
       await this.maybeRefreshCrl();
       return result;
@@ -149,6 +162,49 @@ export class WplmClient {
 
   // ----------------------------------------------------------------- offline
 
+  /**
+   * Reject a signed payload whose product binding does not match `productId`.
+   *
+   * No-op when `productId` is undefined (the app opted out of product binding).
+   * When set, the payload's signed `pid` must equal it; a missing or different
+   * `pid` throws {@link WplmProductMismatch}. Enforced from the signed payload
+   * so the rule holds identically online and offline.
+   */
+  /**
+   * Verify `token` online, recovering from server keypair rotation: if the
+   * cached public key fails verification, drop it, re-fetch `/public-key` once,
+   * and retry. Self-heals clients that cached an old key before the vendor
+   * rotated the signing keypair.
+   */
+  private async verifyWithKeyRefresh(token: string): Promise<Record<string, unknown>> {
+    try {
+      return (await this.getVerifier()).verify(token);
+    } catch (e) {
+      if (e instanceof WplmSignatureInvalid) {
+        // Cached key may be stale — invalidate and re-fetch once.
+        this.verifier = null;
+        await this.store.delete(K_PUBKEY);
+        return (await this.getVerifier()).verify(token);
+      }
+      throw e;
+    }
+  }
+
+  private enforceProductId(payload: Record<string, unknown>): void {
+    const expected = this.productId;
+    if (expected === undefined) {
+      return;
+    }
+    const pid = payload['pid'];
+    const actual = typeof pid === 'number' ? Math.trunc(pid) : null;
+    if (actual !== expected) {
+      throw new WplmProductMismatch(
+        `License is bound to product ${actual ?? 'none'}, but this app is configured for product ${expected}.`,
+        'product_mismatch',
+      );
+    }
+  }
+
   private async validateOffline(key: string): Promise<ValidationResult | null> {
     const token = await this.store.read(K_SIGNED);
     if (!token) {
@@ -168,6 +224,10 @@ export class WplmClient {
       }
       throw e;
     }
+
+    // Product binding is enforced offline too: the signed `pid` must match the
+    // configured productId. No-op when productId is undefined.
+    this.enforceProductId(payload);
 
     if (!SignatureVerifier.isWithinClockDrift(payload, this.maxClockDrift)) {
       return { valid: false, code: 'clock_drift', needsActivation: false, fromCache: true };

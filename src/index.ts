@@ -23,6 +23,7 @@ export {
   WplmBlacklisted,
   WplmNotActive,
   WplmMachineNotFound,
+  WplmProductMismatch,
 } from './errors.js';
 export type { License, Machine, ValidationResult } from './models.js';
 export { machineIsActive } from './models.js';

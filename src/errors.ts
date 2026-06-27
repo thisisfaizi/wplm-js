@@ -28,6 +28,7 @@ export class WplmError extends Error {
       license_not_active: WplmNotActive,
       machine_not_found: WplmMachineNotFound,
       machine_revoked: WplmRevoked,
+      product_mismatch: WplmProductMismatch,
     };
     const Ctor = map[code] ?? WplmApiError;
     return new Ctor(message, code, status);
@@ -47,3 +48,12 @@ export class WplmLimitExceeded extends WplmError {}
 export class WplmBlacklisted extends WplmError {}
 export class WplmNotActive extends WplmError {}
 export class WplmMachineNotFound extends WplmError {}
+
+/**
+ * The license is bound to a different product than this client expects.
+ *
+ * Thrown when the signed payload's `pid` does not match the configured
+ * `productId`. Enforced online and offline from the cryptographically signed
+ * payload, so a key issued for product A cannot run in product B's app.
+ */
+export class WplmProductMismatch extends WplmError {}

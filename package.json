@@ -1,6 +1,6 @@
 {
   "name": "@wplm/sdk",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Official JavaScript/TypeScript SDK for WP License Manager (WPLM) — online + offline license validation.",
   "type": "module",
   "license": "MIT",

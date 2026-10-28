@@ -2,16 +2,14 @@
 
 <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=14,21,28&height=160&section=header&text=wplm-js&fontSize=52&fontAlignY=42&animation=fadeIn&fontColor=ffffff" />
 
-### WP License Manager — JavaScript / TypeScript SDK
+# WP License Manager — JavaScript / TypeScript SDK
 
-[![npm](https://img.shields.io/npm/v/@wplm/sdk?style=for-the-badge&logo=npm&logoColor=white&color=CB3837)](https://www.npmjs.com/package/@wplm/sdk)
-[![CI](https://img.shields.io/github/actions/workflow/status/wplm/wplm-js/ci.yaml?style=for-the-badge&label=CI&logo=github-actions&logoColor=white)](https://github.com/thisisfaizi/wplm-js/actions/workflows/ci.yaml)
-[![Coverage](https://img.shields.io/codecov/c/github/wplm/wplm-js?style=for-the-badge&logo=codecov&logoColor=white)](https://codecov.io/gh/wplm/wplm-js)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0%2B-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://typescriptlang.org)
 
-<p>Offline-first Ed25519 license validation for Node, Electron, and the browser,<br>
-backed by a self-hosted <a href="https://github.com/thisisfaizi/wp-license-manager">WP License Manager</a> server.</p>
+<p>JavaScript / TypeScript SDK for WP License Manager — activate, validate and verify Ed25519-signed<br>
+software license keys offline in Node.js, Electron and browser apps. Backed by a self-hosted<br>
+<a href="https://github.com/thisisfaizi/wp-license-manager">WP License Manager</a> software licensing server for WordPress / WooCommerce.</p>
 
 </div>
 
@@ -21,19 +19,32 @@ Official isomorphic client for **[WP License Manager (WPLM)](https://github.com/
 works in **Node, Electron, and the browser**.
 
 - ✅ Online `validate` / `activate` / `deactivate` / `heartbeat`
-- 🔏 **Offline** Ed25519 signature verification (via `@noble/ed25519`)
+- 🔏 **Offline** Ed25519 signature verification (via `@noble/curves`)
 - 🛡️ Signed CRL check (reject revoked keys offline)
 - 🔌 Pluggable transport, storage, fingerprint, and device-info providers
 - 🔄 Offline expiry enforcement with monotonic time-floor (resists clock rollback)
-- 📦 Dual ESM/CJS build, zero runtime dependencies beyond `@noble`
+- 📦 ESM build with TypeScript types, zero runtime dependencies beyond `@noble`
 
 ---
 
 ## Install
 
+> Not yet published to npm; install from GitHub for now.
+
+The compiled `dist/` folder is not committed, so build the package from source and install the tarball:
+
 ```bash
-npm install @wplm/sdk
+git clone https://github.com/thisisfaizi/wplm-js.git
+cd wplm-js
+npm install
+npm run build
+npm pack            # → wplm-sdk-0.2.0.tgz
+
+# then, in your app
+npm install /path/to/wplm-js/wplm-sdk-0.2.0.tgz
 ```
+
+Imports stay the same: `import { WplmClient } from '@wplm/sdk'`. Requires Node.js 18+.
 
 ---
 
@@ -133,7 +144,7 @@ npm install
 npm run typecheck   # tsc --noEmit
 npm run lint        # eslint (type-checked)
 npm test            # vitest (includes shared golden crypto vectors)
-npm run build       # tsc → dist/ (ESM + CJS + .d.ts)
+npm run build       # tsc → dist/ (ESM + .d.ts)
 ```
 
 ---
@@ -144,7 +155,6 @@ npm run build       # tsc → dist/ (ESM + CJS + .d.ts)
 - [Dart / Flutter SDK](https://github.com/thisisfaizi/wplm-dart)
 - [Python SDK](https://github.com/thisisfaizi/wplm-python)
 - [PHP SDK](https://github.com/thisisfaizi/wplm-php)
-- [OpenAPI 3.1 spec](https://github.com/thisisfaizi/wplm-openapi)
 
 ---
 
